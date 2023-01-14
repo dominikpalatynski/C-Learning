@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <ostream>
+class Histogram
+{
+public:
+    Histogram(){
+
+    };
+    Histogram(std::vector<int> v)
+    {
+        emplace(v);
+    }
+    std::vector<std::pair<int, int>> v_hist;
+
+    void emplace(int point)
+    {
+        bool present_in_v_hist = false;
+        for (auto &it_hist : v_hist)
+        {
+            if (it_hist.first == point)
+            {
+                present_in_v_hist = true;
+                it_hist.second++;
+            }
+        }
+        if (!present_in_v_hist)
+        {
+            v_hist.emplace_back(std::pair<int, int>(point, 1));
+        }
+    };
+
+   
+    void emplace(std::vector<int> v)
+    {
+        for (auto &it : v)
+        {
+            emplace(it);
+        }
+    }
+    Histogram &operator<<(int v)
+    {
+        emplace(v);
+        return *this;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const Histogram &hist)
+    {
+        for (auto &it : hist.v_hist)
+        {
+            os << it.first << ": " << it.second << std::endl;
+        }
+        return os;
+    }
+    void generate(int counter, int(*fun)()){
+        for(int i=0; i< counter; i++){
+            emplace(fun());
+        }
+    }
+};
+int main()
+{
+    Histogram hist;
+    // Histogram hist_2(std::vector<int>({10, 15, 6, 9, 10, 12}));
+
+    hist.emplace(20);
+
+    hist.emplace(std::vector<int>({10, 15, 6, 9, 1, 12}));
+
+    hist << 10 << 12 << 20 << 20 << 20 << 20 << 21;
+    std::cout << hist;
+    Histogram hist_3;
+    hist_3.generate(100, [](){ return -10 + rand() % 21; }); 
+    return 0;
+}

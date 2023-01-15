@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <ostream>
+
+//template used to be able to select variable types within a class
+template <typename T>
+
+class Complex
+{
+private:
+    T real;
+    T imaginary;
+
+    // used friend to correct overload << operator servant to print values
+    friend std::ostream &operator<<(std::ostream &os, const Complex<T> &c)
+    {
+
+        if (c.imaginary > 0)
+        {
+            os << c.real << "+" << c.imaginary << "i";
+        }
+        else
+        {
+            os << c.real << "" << c.imaginary << "i";
+        }
+
+        return os;
+    }
+
+public:
+    Complex() : real(0), imaginary(0) {}
+
+    Complex(T r, T i)
+    {
+        real = r;
+        imaginary = i;
+    }
+    // Overloading char automate simple operations on this complex numbers
+    Complex operator+(const Complex &c)
+        const
+    {
+        return Complex(real + c.real, imaginary + c.imaginary);
+    }
+    Complex operator-(const Complex &c)
+        const
+    {
+        return Complex(real * c.real - real * c.imaginary, real * c.imaginary + c.real * imaginary);
+    }
+    Complex operator*(const Complex &c)
+        const
+    {
+        return Complex(real + c.real, imaginary + c.imaginary);
+    }
+};
+
+// overloading >> operator to print complex number
+
+int main()
+{
+    // Testing Templates on float type
+    Complex<float> c1(1, -2);
+    Complex<float> c2(2, 3);
+    Complex<float> c3 = c1 + c2;
+    std::cout << c3 << std::endl;
+
+    // Testing Templates on double type
+    Complex<double> d1(1, -2);
+    Complex<double> d2(2, 3);
+    Complex<double> d3 = d1 - d2;
+    std::cout << d3 << std::endl;
+
+    // Testing Templates on int type
+    Complex<int> e1(1, -2);
+    Complex<int> e2(2, 3000);
+    Complex<int> e3 = e1 * e2;
+    std::cout << e3 << std::endl;
+
+    return 0;
+}
